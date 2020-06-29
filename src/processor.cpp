@@ -15,4 +15,4 @@ double Processor::Utilization() {
 
   return smallJiffie;
     
-    }
+}

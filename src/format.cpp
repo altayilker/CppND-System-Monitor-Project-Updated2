@@ -13,14 +13,16 @@ using std::ostringstream;
 
  
  string Format::ElapsedTime(long seconds) { 
+     
     int  hours,minutes;
     ostringstream stream;
     hours=seconds/3600;
     seconds=seconds%3600;
     minutes=seconds/60;
     seconds=seconds%60;
-    stream<<std::setw(2)<<std::setfill('0')<<hours<<":"
-          <<std::setw(2)<<std::setfill('0')<<minutes<<":"
-          <<std::setw(2)<<std::setfill('0')<<seconds;
-    return stream.str();}  
+    stream << std::setw(2)<<std::setfill('0') << hours <<":" << std::setw(2) << std::setfill('0') << minutes<<":" << std::setw(2)<<std::setfill('0') << seconds;
+
+    return stream.str();
+    
+}  
  
