@@ -2,9 +2,9 @@
 #define SYSTEM_PARSER_H
 
 #include <fstream>
+#include <sstream>
 #include <regex>
 #include <string>
-#include <vector>
 
 namespace LinuxParser {
 // Paths
@@ -21,7 +21,7 @@ const std::string kPasswordPath{"/etc/passwd"};
 
 // System
 float MemoryUtilization();
-long int UpTime();
+long UpTime();
 std::vector<int> Pids();
 int TotalProcesses();
 int RunningProcesses();
@@ -41,18 +41,19 @@ enum CPUStates {
   kGuest_,
   kGuestNice_
 };
-void CpuUtilization();
+std::vector<std::string> CpuUtilization();
 long Jiffies();
 long ActiveJiffies();
 long ActiveJiffies(int pid);
 long IdleJiffies();
 
 // Processes
+std::vector<std::string> CpuUtilization(int pid);
 std::string Command(int pid);
 std::string Ram(int pid);
 std::string Uid(int pid);
 std::string User(int pid);
-long UpTime(int pid);
+long int UpTime(int pid);
 };  // namespace LinuxParser
 
 #endif

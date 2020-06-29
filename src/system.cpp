@@ -8,50 +8,40 @@
 #include "processor.h"
 #include "system.h"
 #include "linux_parser.h"
+using namespace std;
 
-using std::set;
-using std::size_t;
-using std::string;
-using std::vector;
-
-// TODO: Return the system's CPU
-Processor& System::Cpu() { return cpu_; }
-
-// TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { 
-    
-    processes_.clear();
-    std::vector<int> temp = LinuxParser::Pids();
-
-    for(int i = 0; i < temp.size(); i++)
-    {
-        Process proc;
-
-        proc.set_Pid(temp[i]);
-        processes_.push_back(proc);
+System::System() {
+	for(int pid: LinuxParser::Pids()) {
+    	processes_.push_back(Process(pid));
     }
-
-    return processes_; 
-
 }
 
-// TODO: Return the system's kernel identifier (string)
+
+Processor& System::Cpu() { 
+    std::vector<string> utilizations = LinuxParser::CpuUtilization();
+    utilizations.clear();
+    return cpu_;
+}
+
+
+vector<Process>& System::Processes() { 
+    sort(processes_.begin(), processes_.end());
+    return processes_; 
+}
+
 std::string System::Kernel() { return LinuxParser::Kernel(); }
 
-// TODO: Return the system's memory utilization
-float System::CpuUtilization() { return 0.12; }
 
-// TODO: Return the system's memory utilization
 float System::MemoryUtilization() { return LinuxParser::MemoryUtilization(); }
 
-// TODO: Return the operating system name
+
 std::string System::OperatingSystem() { return LinuxParser::OperatingSystem(); }
 
-// TODO: Return the number of processes actively running on the system
+
 int System::RunningProcesses() { return LinuxParser::RunningProcesses(); }
 
-// TODO: Return the total number of processes on the system
-int System::TotalProcesses() { return LinuxParser::TotalProcesses(); }
 
-// TODO: Return the number of seconds since the system started running
+int System::TotalProcesses() { return processes_.size(); }
+
+
 long int System::UpTime() { return LinuxParser::UpTime(); }
