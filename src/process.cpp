@@ -11,8 +11,15 @@ using std::string;
 using std::to_string;
 using std::vector;
 
+float i = 0.1;
+
+Process::Process(int pid):pid_(pid){}
+
+
 // TODO: Return this process's ID
-int Process::Pid() { return (LinuxParser::Pids())[Process::pid_]; } // (LinuxParser::Pids())[Process::pid]
+int Process::Pid() { return pid_; }
+
+// int Process::Pid() { return (LinuxParser::Pids())[Process::pid_]; } // (LinuxParser::Pids())[Process::pid]
 
 void Process::set_Pid(int x){
 
@@ -22,25 +29,24 @@ void Process::set_Pid(int x){
 // TODO: Return this process's CPU utilization
 float Process::CpuUtilization() { 
 
-    return 0.12; 
-    
+    i = i +1;
+    return i*0.01;     
 }
 
-// TODO: Return the command that generated this process
 string Process::Command() { return LinuxParser::Command(Process::pid_); }  // LinuxParser::Command(Process::pid)
 
 // TODO: Return this process's memory utilization
 string Process::Ram() { 
     
-    // std::cout << "LinuxParser::Ram(Process::pid): " << LinuxParser::Ram(Process::pid) << "\n";
-    return LinuxParser::Ram(Process::pid_); 
+    string deneme = LinuxParser::Ram(Process::pid_);
+    return deneme; 
 
-} // LinuxParser::Ram(Process::pid)
+} 
 
 // TODO: Return the user (name) that generated this process
 string Process::User() { return LinuxParser::User(Process::pid_); }  // LinuxParser::User()
 
-void Process::set_User(int x){
+void Process::set_User(){
  
     Process::user_ = LinuxParser::User(Process::pid_); 
 
@@ -51,8 +57,7 @@ long int Process::UpTime() { return LinuxParser::UpTime(Process::pid_); }  // Li
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a) const 
-{ 
-        return true;
 
+bool Process::operator<(Process& a) {
+  return CpuUtilization() < a.CpuUtilization();
 }

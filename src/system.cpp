@@ -20,18 +20,11 @@ Processor& System::Cpu() { return cpu_; }
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() { 
     
-    processes_.clear();
-    std::vector<int> temp = LinuxParser::Pids();
-
-    for(int i = 0; i < temp.size(); i++)
-    {
-        Process proc;
-
-        proc.set_Pid(temp[i]);
-        processes_.push_back(proc);
+    vector<int> processes = LinuxParser::Pids();
+    for(int i = 0; i < processes.size(); i++){
+        processes_.push_back(Process(processes[i]));
     }
-
-    return processes_; 
+    return processes_;
 
 }
 
@@ -39,7 +32,7 @@ vector<Process>& System::Processes() {
 std::string System::Kernel() { return LinuxParser::Kernel(); }
 
 // TODO: Return the system's memory utilization
-float System::CpuUtilization() { return 0.12; }
+float System::CpuUtilization() { return 0.18; }
 
 // TODO: Return the system's memory utilization
 float System::MemoryUtilization() { return LinuxParser::MemoryUtilization(); }

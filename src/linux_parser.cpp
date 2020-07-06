@@ -14,8 +14,6 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-std::array<int,10> cpu_last = {};
-int cpu_last_sum = 0;
 
 
 // DONE: An example of how to read data from the filesystem
@@ -213,8 +211,6 @@ string LinuxParser::Command(int pid) {
   if (stream.is_open()) {
     std::getline(stream, line);
   }
-  //std::cout << "kProcDirectory + s + kCmdlineFilename: " << kProcDirectory + s + kCmdlineFilename << "\n";
-  //std::cout << "line: " << line << "\n";
 
   return line; 
   
@@ -224,6 +220,7 @@ string LinuxParser::Command(int pid) {
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Ram(int pid) { 
   
+  /*
   string key;
   int value;
   string line;
@@ -237,14 +234,36 @@ string LinuxParser::Ram(int pid) {
 
         std::istringstream linestream(line);
         while (linestream >> key >> value) {
-            if (key == "VmSize:") 
+            if (key == "VmSize:") {
               processes = value*0.001;
-
+              return to_string(processes);
+            }
         }
       }
   }
+  // return string();
+  */
 
-  return to_string(processes); 
+ string line;
+  string s, ram;
+  int value;
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatusFilename);
+  if (stream.is_open()) {
+      // getline(stream, line);<-- Please think about it, whether it is necessary ?
+      // std::istringstream linestream(line);
+      // linestream >> s; // When you do this then the linestream moves to the next character in the line but since you are not using this fact later and you are defining a new character, do you think it is necessary to declare "std::istringstream linestream(line)" here
+      while (std::getline(stream, line)) {
+          std::istringstream linestream(line);
+          linestream >> s >> ram;
+          if(s=="VmSize:"){
+            return std::to_string(std::stol(ram)/1000);
+          }
+      }
+    }  
+  if (value == 0) {
+    ram = "0.0";
+  }
+  return ram; 
 
 }
 
