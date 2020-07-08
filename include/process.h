@@ -28,6 +28,7 @@ class Process {
  private:
     int pid_;
     std::string user_;
+    float cpuutil;
 
 };
 

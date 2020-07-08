@@ -121,34 +121,103 @@ long LinuxParser::UpTime() {
 }
 
 // TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
+long LinuxParser::Jiffies() {
+  long jiffies = 0;
+  std::ifstream stream(kProcDirectory + kStatFilename);
+  if (stream.is_open()) {
+    string Line;
+    string Key;
+    std::getline(stream, Line);
+    std::istringstream LineStream(Line);
+    std::map<CPUStates, long> States;
+    LineStream >>
+      Key >>
+      States[kUser_] >>
+      States[kNice_] >>
+      States[kSystem_] >>
+      States[kIdle_] >>
+      States[kIOwait_] >>
+      States[kIRQ_] >>
+      States[kSoftIRQ_] >>
+      States[kSteal_] >>
+      States[kGuest_] >>
+      States[kGuestNice_];
+    if (Key == "cpu") {
+      for (auto S : States) {
+        jiffies += S.second;
+      }
+    }
+  }
+  return jiffies;
+}
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
-
-// TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0; }
-
-// TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
-
-// TODO: Read and return CPU utilization
-void LinuxParser::CpuUtilization(){
-  /* vector<string> data;
-  string line, key, value;
-  std::ifstream stream(kProcDirectory + kStatFilename);
+long LinuxParser::ActiveJiffies(int pid) {
+  long jiffies = 0;
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
   if (stream.is_open()) {
-    std::getline(stream, line);
-    std::istringstream linestream(line);
-    for (int i = 0; i <= 10; i++) {
-    	linestream >> value;
-      	data.push_back(value);
+    string Line;
+    string Value;
+    std::getline(stream, Line);
+    std::istringstream linestream(Line);
+    int n = 0;
+    while (linestream >> Value && n++ < 15) {
+      if (n == 14 || n == 15) {
+        jiffies += std::atoi(Value.c_str());
+      }
     }
   }
-  data.erase(data.begin());
-  return data;
-  */
+  return jiffies;
+}
+
+// TODO: Read and return the number of active jiffies for the system
+long LinuxParser::ActiveJiffies() {
+  return Jiffies() - IdleJiffies();
+}
+
+// TODO: Read and return the number of idle jiffies for the system
+long LinuxParser::IdleJiffies() {
+  long jiffies = 0;
+  std::ifstream stream(kProcDirectory + kStatFilename);
+  if (stream.is_open()) {
+    string Line;
+    string Key;
+    std::getline(stream, Line);
+    std::istringstream LineStream(Line);
+    std::map<CPUStates, long> States;
+    LineStream >>
+      Key >>
+      States[kUser_] >>
+      States[kNice_] >>
+      States[kSystem_] >>
+      States[kIdle_];
+    if (Key == "cpu") {
+      jiffies = States[kIdle_];
+    }
+  }
+  return jiffies;
+}
+
+// TODO: Read and return CPU utilization
+vector<string> LinuxParser::CpuUtilization() {
+  vector<string> ProcessorsStrings;
+  std::ifstream stream(kProcDirectory + kStatFilename);
+  if (stream.is_open()) {
+    string line;
+    int i = 0;
+    while (std::getline(stream, line)) {
+      if (line.substr(0, 3) == "cpu") {
+        if (++i > 1) {
+          ProcessorsStrings.push_back(line);
+        }
+      }
+      else {
+        break;
+      }
+    }
+  }
+  return ProcessorsStrings;
 }
 
 // TODO: Read and return the total number of processes
@@ -220,30 +289,6 @@ string LinuxParser::Command(int pid) {
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Ram(int pid) { 
   
-  /*
-  string key;
-  int value;
-  string line;
-  int processes;
-
-  std::string s = std::to_string(pid);
-  std::ifstream filestream(kProcDirectory + s + kStatusFilename);
-
-  if (filestream.is_open()) {
-      while (std::getline(filestream, line)) {
-
-        std::istringstream linestream(line);
-        while (linestream >> key >> value) {
-            if (key == "VmSize:") {
-              processes = value*0.001;
-              return to_string(processes);
-            }
-        }
-      }
-  }
-  // return string();
-  */
-
  string line;
   string s, ram;
   int value;

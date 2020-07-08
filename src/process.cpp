@@ -29,8 +29,7 @@ void Process::set_Pid(int x){
 // TODO: Return this process's CPU utilization
 float Process::CpuUtilization() { 
 
-    i = i +1;
-    return i*0.01;     
+    return cpuutil;    
 }
 
 string Process::Command() { return LinuxParser::Command(Process::pid_); }  // LinuxParser::Command(Process::pid)
