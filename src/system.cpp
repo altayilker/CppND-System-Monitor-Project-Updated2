@@ -21,9 +21,19 @@ Processor& System::Cpu() { return cpu_; }
 vector<Process>& System::Processes() { 
     
     vector<int> processes = LinuxParser::Pids();
+     
     for(int i = 0; i < processes.size(); i++){
         processes_.push_back(Process(processes[i]));
     }
+    
+    for(int i = 0; i < processes.size(); i++){
+        processes_[i].User();
+        processes_[i].CpuUtilization();
+        processes_[i].Ram();
+        processes_[i].UpTime();
+        processes_[i].Command();
+    }
+    sort(processes_.begin(),processes_.end());
     return processes_;
 
 }

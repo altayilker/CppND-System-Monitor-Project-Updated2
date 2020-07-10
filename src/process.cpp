@@ -11,7 +11,6 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-float i = 0.1;
 
 Process::Process(int pid):pid_(pid){}
 
@@ -29,7 +28,7 @@ void Process::set_Pid(int x){
 // TODO: Return this process's CPU utilization
 float Process::CpuUtilization() { 
 
-    return cpuutil;    
+    return cpu_;    
 }
 
 string Process::Command() { return LinuxParser::Command(Process::pid_); }  // LinuxParser::Command(Process::pid)
@@ -37,22 +36,17 @@ string Process::Command() { return LinuxParser::Command(Process::pid_); }  // Li
 // TODO: Return this process's memory utilization
 string Process::Ram() { 
     
-    string deneme = LinuxParser::Ram(Process::pid_);
-    return deneme; 
+    return ram_ = LinuxParser::Ram(Process::pid_); 
 
 } 
 
 // TODO: Return the user (name) that generated this process
-string Process::User() { return LinuxParser::User(Process::pid_); }  // LinuxParser::User()
+string Process::User() { return user_ = LinuxParser::User(Process::pid_); }  // LinuxParser::User()
 
-void Process::set_User(){
- 
-    Process::user_ = LinuxParser::User(Process::pid_); 
 
-}
 
 // TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { return LinuxParser::UpTime(Process::pid_); }  // LinuxParser::UpTime()
+long int Process::UpTime() { return time_ = LinuxParser::UpTime(Process::pid_); }  // LinuxParser::UpTime()
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
