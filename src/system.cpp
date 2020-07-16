@@ -23,11 +23,11 @@ vector<Process>& System::Processes() {
     processes_.clear(); // when erased, changes in the process queue changes.
     vector<int> processes = LinuxParser::Pids();
      
-    for(int i = 0; i < processes.size(); i++){
+    for(uint i = 0; i < processes.size(); i++){
         processes_.push_back(Process(processes[i]));
     }
     
-    for(int i = 0; i < processes.size(); i++){
+    for(uint i = 0; i < processes.size(); i++){
         processes_[i].User();
         processes_[i].CpuUtilization();
         processes_[i].Ram();

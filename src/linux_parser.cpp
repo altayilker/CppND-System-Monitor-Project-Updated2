@@ -50,7 +50,7 @@ string LinuxParser::Kernel() {
     std::istringstream linestream(line);
     linestream >> os >> version >> kernel;
   }
-  return version;
+  return kernel;
 }
 
 // BONUS: Update this to use std::filesystem
@@ -249,7 +249,6 @@ string LinuxParser::Ram(int pid) {
   
  string line;
   string s, ram;
-  int value;
   std::ifstream stream(kProcDirectory + to_string(pid) + kStatusFilename);
   if (stream.is_open()) {
       // getline(stream, line);<-- Please think about it, whether it is necessary ?
@@ -263,9 +262,7 @@ string LinuxParser::Ram(int pid) {
           }
       }
     }  
-  if (value == 0) {
-    ram = "0.0";
-  }
+
   return ram; 
 
 }
